@@ -22,9 +22,9 @@ plot[0].imshow(im_rgb)
 plot[0].set_title('ORIGINAL') 
 plot[1].imshow(ZEROARRAY) 
 plot[1].set_title('Image Mask')
-plot[2].imshow(cv2.bitwise_and(ZEROARRAY, im_rgb)) 
+plot[2].imshow(cv2.bitwise_and(ZEROARRAY, im_rgb))
 plot[2].set_title('Bitwise_and Result')
 
- 
+
 plt.show() # display plot
 

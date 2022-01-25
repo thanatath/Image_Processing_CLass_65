@@ -13,7 +13,8 @@ def loopWriteVideo(IMG,IMG2):
     sa=1.0
     sb=0.01
     # Define the codec and create VideoWriter object
-    writer = cv2.VideoWriter('Addition.avi', cv2.VideoWriter_fourcc(*'MP4V'), 10, (600,400))
+ 
+    writer = cv2.VideoWriter('Addition.avi', cv2.VideoWriter_fourcc(*'MP4V'), 10, (IMG.shape[1],IMG.shape[0]))
     for i in range(0,100):
             image=cv2.addWeighted(IMG, sa, IMG2, sb, 0)
             writer.write(image)
