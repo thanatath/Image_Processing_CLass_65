@@ -1,4 +1,4 @@
-#import lib
+# %%
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -7,8 +7,7 @@ from skimage.exposure import cumulative_distribution
 
 IMG = cv2.imread('img.jpg')
 
-def addjustgamma(img,gamma):
-    
+def addjustgamma(img,gamma):    
     temp=img.copy()
     y = 1.0 / gamma
     a=1.0
@@ -24,13 +23,17 @@ def writeVIdeo(img,name):
     
     out = cv2.VideoWriter(name,fourcc, 20.0, (img.shape[1],img.shape[0])) #initiation of video writer
     
-    gramma_range = np.arange(0.1,5,0.1) # define the range of the gramma frames
-    
+    gramma_rangeup = np.arange(0.1,5,0.1) # define the range of the gramma frames
+    gramma_rangedown = np.arange(5,0.1,-0.1) # define the range of the gramma frames
     #loop for Gramma Frames
-    for i in gramma_range:
+    for i in gramma_rangeup:
         img_Gramma = addjustgamma(IMG,i)
         out.write(img_Gramma)
-        
+    
+    for i in gramma_rangedown:
+        img_Gramma = addjustgamma(IMG,i)
+        out.write(img_Gramma)
+    
     #Release and close the video writer
     out.release()
 
@@ -52,5 +55,5 @@ while(cap.isOpened()):
 cap.release()
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
-
+ 
+# %%
