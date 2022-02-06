@@ -34,7 +34,7 @@ img_index -= img_mean
 img_index = cv2.cvtColor(img_index, cv2.COLOR_RGB2BGR)
 
 plt.imshow(img_index)
-#plt.show()
+plt.show()
 print('img_index SHAPE : ',img_index.shape)
 
 #---------------------------------------3------------------------------------------
@@ -44,12 +44,11 @@ kernel , bias = model.layers[1].get_weights()
 
 print('kernel SHAPE : ',kernel.shape)
 
-img_result = np.zeros((224,224,3)) 
 condvlist = expand_dims(img_array, axis=0)
 
 def image_convolution_with_kernel(img_index, kernel):
-    tmp_img_result = np.zeros((64,224,224,3))
-    tmp = np.zeros((224,224,3))
+    tmp_img_result = np.zeros((64,224,224,3)) #dummpy array
+    tmp = np.zeros((224,224,3)) #dummpy array
     for i in range(64):
         tmp[:,:,0] = signal.convolve2d(img_index[:, :, 0], kernel[:, :,0, i], mode='same',boundary='fill', fillvalue=0)
         tmp_img_result[i,:,:,0] = tmp[:,:,0]
@@ -61,6 +60,7 @@ def image_convolution_with_kernel(img_index, kernel):
         tmp_img_result[i,:,:,2] = tmp[:,:,2]
     return tmp_img_result
 
+img_result = np.zeros((224,224,3)) 
 img_result = image_convolution_with_kernel(img_index, kernel)
 
 
@@ -77,6 +77,7 @@ img_sum = act.relu(img_sum) #activation function
 
 def display64filter(feature_map):
     #display 64 filter
+    print('feature_map SHAPE : ',feature_map.shape)
     for i in range(64):
         plt.subplot(8, 8, i+1)
         plt.imshow(feature_map[i,:, :],cmap='jet')
