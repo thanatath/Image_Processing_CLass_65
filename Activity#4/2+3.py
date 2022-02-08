@@ -69,8 +69,19 @@ img_sum = img_result[:,:,:,0]+img_result[:,:,:,1]+img_result[:,:,:,2]
 
 print('img_result SHAPE : ',img_sum.shape)
 
+def activation(img_sum):
+    for e in range(64):
+        for i in range(224):
+            for j in range(224):
+                if img_sum[e,i,j] > 0:
+                    continue
+                else:
+                    img_sum[e,i,j] = 0
+    return img_sum
 
-img_sum = act.relu(img_sum) #activation function
+img_sum = activation(img_sum)
+
+#img_sum = act.relu(img_sum) #activation function
 
 
 #---------------------------------------PLOT------------------------------------------

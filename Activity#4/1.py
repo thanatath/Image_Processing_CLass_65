@@ -21,6 +21,11 @@ model.summary()
 
 #retrive kernel weight of convolution layer
 kernel , bias = model.layers[1].get_weights()
+
+print('kernel SHAPE : ',kernel.shape)
+
+print('kernel SHAPE : ',kernel[:,:,:,0])
+
 #view cnn layer architecture
 model.layers[1].get_config()
 
@@ -36,12 +41,15 @@ img = expand_dims(img_array, axis=0)
 img_ready = preprocess_input(img)
 
 
+
 #Extract model CNN Layer 1
 model = Model(inputs=model.input, outputs=model.layers[1].output)
 model.summary()
 
 #CNN Layer 1 ->n_filter = 64
 feature_map = model.predict(img_ready)
+
+print('feature_map SHAPE : ',feature_map.shape)
 
 def display64filter(feature_map):
     #display 64 filter
