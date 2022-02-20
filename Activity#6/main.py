@@ -111,8 +111,8 @@ model = KerasRegressor(build_fn=create_model,epochs=2,batch_size=16,verbose=0)
 
 def Grid_search(model,x_train,y_train):
     optimizers = ['adam','rmsprop','sgd','adagrad']
-    batch_size = [8]
-    epochs = [2]
+    batch_size = [8,16,32]
+    epochs = [2,4,6]
     param_grid = dict(optimizer=optimizers,batch_size=batch_size,epochs=epochs)
     grid = GridSearchCV(estimator=model,
                         param_grid=param_grid,
