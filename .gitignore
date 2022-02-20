@@ -1,3 +1,7 @@
 Playground/*
-Activity#5/face_dataset/*
-Activity#5/face_mini/*
+*/face_dataset/*
+*/face_mini/*
+*.tar
+*.zip
+*.spec
+*/__pycache__/*
