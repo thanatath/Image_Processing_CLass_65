@@ -109,7 +109,7 @@ model = KerasRegressor(build_fn=create_model,epochs=2,batch_size=16,verbose=0)
 
 
 
-def Grid_search(model,x_train,y_train):
+def Grid_search(model,x_train,y_train):    
     optimizers = ['adam','rmsprop','sgd','adagrad']
     batch_size = [8,16,32]
     epochs = [2,4,6]
@@ -147,7 +147,11 @@ plot_result_from_all_combination_of_grid_parameter(grid_result.cv_results_['mean
 print("Best parameters:", grid_result.best_params_)
 print("Best score: ", grid_result.best_score_)
 
+plt.bar(range(len(means)), means)
+plt.bar(range(len(stds)), stds)
 
+for mean, stdev, param in zip(means, stds, params):
+      print("%f (%f) with: %r" % (mean, stdev, param))
 
 #----------------------------------3-------------------------------------
 
@@ -165,6 +169,7 @@ def Grid_search_rand(model,x_train,y_train):
                                 verbose=2,
                                 cv=2,
                                 n_iter=10,
+                                random_state=10,
                                 param_distributions=random_search,
                                 n_jobs=1)
     grid_result = grid_rand.fit(x_train,y_train)
@@ -187,9 +192,11 @@ params = grid_result.cv_results_['params']
 
 plot_result_from_all_combination_of_grid_parameter(grid_result.cv_results_['mean_test_score'],grid_result.cv_results_['std_test_score'],grid_result.cv_results_['params'])
     
-
-
-
+plt.bar(range(len(means)), means)
+plt.bar(range(len(stds)), stds)
+ 
+for mean, stdev, param in zip(means, stds, params):
+      print("%f (%f) with: %r" % (mean, stdev, param))
 
 
 
