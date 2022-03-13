@@ -5,3 +5,5 @@ Playground/*
 *.zip
 *.spec
 */__pycache__/*
+*.mp4
+*.avi

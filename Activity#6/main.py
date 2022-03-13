@@ -70,8 +70,8 @@ def display5plot(imgs):
     plt.tight_layout()
     plt.show()
 
-#display5plot(train_x[:5])
-#display5plot(x_train_noisy[:5])
+display5plot(train_x[:5])
+display5plot(x_train_noisy[:5])
  
     
 #----------------------------------2-------------------------------------
