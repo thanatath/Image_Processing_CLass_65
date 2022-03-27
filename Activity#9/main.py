@@ -67,16 +67,26 @@ ax[2].imshow(hog_feature3, cmap=plt.cm.gray)
 ax[2].set_title('Block_size = (40, 30)')
 plt.show()
 
+###for Hog1 only !!!
+Stride = (10, 10)
+h, w, c = img.shape
+Block_size=(40,20)
+tile_size = [50,50]
+###for Hog1 only !!!
+
+posRow = np.arange(0, h-Block_size[0]+1, Stride[0])
+posCol = np.arange(0, w-tile_size[1]+1, Stride[1])
 
 #################################### 9.2 ####################################################
 
 #clean feature if NA
 
-def clean_feature_if_NA(feature):
+def clean_feature(feature):
+    feature_clean = []
     for i in range(len(feature)):
-        if np.isnan(feature[i]):
-            feature[i] = 0
-    return feature
+        if np.isnan(feature[i]).any() == False:
+            feature_clean.append(feature[i])
+    return feature_clean
 
 
 hog_feature1_cleaned = clean_feature(hog_feature1)
@@ -84,10 +94,9 @@ hog_feature1_cleaned = clean_feature(hog_feature1)
 Kmean = KMeans(n_clusters=2, random_state=0)
 cluster = Kmean.fit_predict(hog_feature1_cleaned)
 
+
 def clusterID_to_grid(cluster):
-    grid = np.zeros((10, 50))
-    for i in range(len(cluster)):
-        grid[i//50, i%50] = cluster[i]
+    grid = cluster.reshape(len(posRow), len(posCol))
     return grid
 
 cluster_array = clusterID_to_grid(cluster)
@@ -96,4 +105,24 @@ print(cluster_array)
 plt.imshow(cluster_array, cmap='plasma')
 
 
+#################################### 9.3 ####################################################
 
+all_labels = label(cluster_array)
+
+#bounding box
+color = (255, 0, 0)
+thickness = 1
+
+#ROI
+nClass = np.unique(all_labels)
+
+for i in nClass:
+   objPos = np.where(all_labels == i)
+   startBlockH = objPos[0][0]
+   endBlockH =  objPos[0][-1]
+   startBlockW =  objPos[1][0]
+   endBlockW =  objPos[1][-1]
+   startF = posCol[startBlockW], posRow[startBlockH]
+   endF =  posCol[endBlockW]+Block_size[1], posRow[endBlockH]+Block_size[0]
+ROI_bound = cv2.rectangle(img, startF, endF, color, thickness)
+plt.imshow(ROI_bound)
