@@ -9,3 +9,6 @@ Playground/*
 *.avi
 *.png
 *.jpg
+*.jpeg
+.gitignore
+*.webp
