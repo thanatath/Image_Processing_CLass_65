@@ -32,7 +32,7 @@ plt.show()
 
 #################################### 9.1.2 ####################################################
 
-img = cv2.imread(all_files[0])
+img = cv2.imread(all_files[1])
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 
@@ -67,12 +67,12 @@ ax[2].imshow(hog_feature3, cmap=plt.cm.gray)
 ax[2].set_title('Block_size = (40, 30)')
 plt.show()
 
-###for Hog1 only !!!
+###for Hog specific only !!!
 Stride = (10, 10)
 h, w, c = img.shape
 Block_size=(40,20)
 tile_size = [50,50]
-###for Hog1 only !!!
+###for Hog specific only !!!
 
 posRow = np.arange(0, h-Block_size[0]+1, Stride[0])
 posCol = np.arange(0, w-tile_size[1]+1, Stride[1])
