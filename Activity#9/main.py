@@ -18,10 +18,10 @@ hog2 = cv2.GaussianBlur(cv2.resize(cv2.imread(all_files[1]), (500, 500)), (5, 5)
 hog3 = cv2.GaussianBlur(cv2.resize(cv2.imread(all_files[2]), (500, 500)), (5, 5), 0)
 hog4 = cv2.GaussianBlur(cv2.resize(cv2.imread(all_files[3]), (500, 500)), (5, 5), 0)
 
-fd, hog_image1 = hog(hog1, orientations=9, pixels_per_cell=(8, 8),cells_per_block=(2, 2), visualize=True, multichannel=True)
-fd, hog_image2 = hog(hog2, orientations=9, pixels_per_cell=(8, 8),cells_per_block=(2, 2), visualize=True, multichannel=True)
-fd, hog_image3 = hog(hog3, orientations=9, pixels_per_cell=(8, 8),cells_per_block=(2, 2), visualize=True, multichannel=True)
-fd, hog_image4 = hog(hog4, orientations=9, pixels_per_cell=(8, 8),cells_per_block=(2, 2), visualize=True, multichannel=True)
+fd1, hog_image1 = hog(hog1, orientations=9, pixels_per_cell=(20, 20),cells_per_block=(2, 2), visualize=True, multichannel=True)
+fd2, hog_image2 = hog(hog2, orientations=9, pixels_per_cell=(20, 20),cells_per_block=(2, 2), visualize=True, multichannel=True)
+fd3, hog_image3 = hog(hog3, orientations=9, pixels_per_cell=(20, 20),cells_per_block=(2, 2), visualize=True, multichannel=True)
+fd4, hog_image4 = hog(hog4, orientations=9, pixels_per_cell=(20,20),cells_per_block=(2, 2), visualize=True, multichannel=True)
 
 plot, ax = plt.subplots(1, 4, figsize=(12, 4), sharey=True, sharex=True)
 ax[0].imshow(hog_image1, cmap=plt.cm.gray)
@@ -32,7 +32,7 @@ plt.show()
 
 #################################### 9.1.2 ####################################################
 
-img = cv2.imread(all_files[1])
+img = cv2.imread(all_files[0])
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 
@@ -55,17 +55,17 @@ def hog_feature(img,Block_size):
 
 
 hog_feature1 = hog_feature(img,(40, 20))
-hog_feature2 = hog_feature(img,(60, 20))
-hog_feature3 = hog_feature(img,(40, 30))
+#hog_feature2 = hog_feature(img,(60, 20))
+#hog_feature3 = hog_feature(img,(40, 30))
     
-plot, ax = plt.subplots(1, 3, figsize=(12, 4), sharey=True, sharex=True)
-ax[0].imshow(hog_feature1, cmap=plt.cm.gray)
-ax[0].set_title('Block_size = (40, 20)')
-ax[1].imshow(hog_feature2, cmap=plt.cm.gray)
-ax[1].set_title('Block_size = (60, 20)')
-ax[2].imshow(hog_feature3, cmap=plt.cm.gray)
-ax[2].set_title('Block_size = (40, 30)')
-plt.show()
+#plot, ax = plt.subplots(1, 3, figsize=(12, 4), sharey=True, sharex=True)
+#ax[0].imshow(hog_feature1, cmap=plt.cm.gray)
+#ax[0].set_title('Block_size = (40, 20)')
+#ax[1].imshow(hog_feature2, cmap=plt.cm.gray)
+#ax[1].set_title('Block_size = (60, 20)')
+#ax[2].imshow(hog_feature3, cmap=plt.cm.gray)
+#ax[2].set_title('Block_size = (40, 30)')
+#plt.show()
 
 ###for Hog specific only !!!
 Stride = (10, 10)
