@@ -7,6 +7,7 @@ from keras.layers import Dense,GlobalAveragePooling2D
 from keras.applications.mobilenet import MobileNet
 from keras.applications.mobilenet import preprocess_input
 from keras.preprocessing.image import ImageDataGenerator
+from keras.layers import Dropout
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import Model
@@ -23,6 +24,7 @@ base_model = MobileNet(weights='imagenet', include_top=False)
 
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
+x = Dropout(0.5)(x)
 x = Dense(1024, activation='relu')(x)
 x = Dense(1024, activation='relu')(x)
 x = Dense(512, activation='relu')(x)
@@ -33,12 +35,12 @@ preds = Dense(3, activation='softmax')(x)
 model = Model(inputs=base_model.input, outputs=preds)
 model.summary() #Before freezing
 
-for layer in model.layers[:5]:
-    layer.trainable = True
-for layer in model.layers[8:10]:
-    layer.trainable = False
-for layer in model.layers[20:-1]:
-    layer.trainable = True
+#for layer in model.layers[:5]:
+#    layer.trainable = True
+#for layer in model.layers[8:10]:
+#    layer.trainable = False
+#for layer in model.layers[20:-1]:
+#    layer.trainable = True
 
 model.summary() #After freezing
 
@@ -90,8 +92,8 @@ print(step_size_val)
 
 #train the model
 
-EP = 50
-
+EP = 20
+callback = EarlyStopping(monitor='val_loss', patience=3, verbose=1, mode='auto')
 history = model.fit_generator(train_generator, steps_per_epoch=step_size_train, epochs=EP, validation_data=val_generator, validation_steps=step_size_val)
 
 def performanc_plot_acc(history):

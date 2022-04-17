@@ -12,3 +12,4 @@ Playground/*
 *.jpeg
 .gitignore
 *.webp
+*.h5
