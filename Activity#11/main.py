@@ -179,6 +179,10 @@ g_model.summary()
 ################################ Visual Layer ########################################
 visualkeras.layered_view(d_model,draw_shapes=1,legend=True,padding_left=50,padding_vertical=75)
 visualkeras.layered_view(g_model,draw_shapes=1,legend=True)
+gan_model_view = Sequential()
+gan_model_view.add(g_model)
+gan_model_view.add(d_model)
+visualkeras.layered_view(gan_model_view,draw_shapes=1,legend=True)
      
 
 ###################################11.3#####################################
@@ -197,6 +201,9 @@ def define_gan(g_model, d_model, image_shape=(img_size[0],img_size[1],3)):
     opt = Adam(lr=0.0002, beta_1=0.5)
     model.compile(loss='binary_crossentropy', optimizer=opt)
     return model
+
+
+
 
 
 # generate points in latent space as input for the generator
@@ -258,9 +265,8 @@ def summarize_performance(epoch, g_model, d_model, dataset, latent_dim, n_sample
 gan_model = define_gan(g_model, d_model)
 gan_model.summary()
 
-train(g_model, d_model, gan_model, train_dataset, latent_dim=100,n_epochs=3000)
+train(g_model, d_model, gan_model, train_dataset, latent_dim=100,n_epochs=100)
 
-X = g_model.predict(real_im_test)
 X = g_model.predict(generate_latent_points(100,1))
 
 # plot the result
