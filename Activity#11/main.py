@@ -258,9 +258,9 @@ def summarize_performance(epoch, g_model, d_model, dataset, latent_dim, n_sample
 gan_model = define_gan(g_model, d_model)
 gan_model.summary()
 
-
 train(g_model, d_model, gan_model, train_dataset, latent_dim=100,n_epochs=3000)
 
+X = g_model.predict(real_im_test)
 X = g_model.predict(generate_latent_points(100,1))
 
 # plot the result
@@ -273,3 +273,22 @@ def plot_all_image():
         plt.axis('off')
     plt.show()
 plot_all_image()
+
+####################################### Load model 
+
+loaded_model = tf.keras.models.load_model('./Saved_model/generator_model_3000.h5')
+
+#test on real image
+pick_img = x_real[8]
+real_im_test = cv2.resize(pick_img,(6,6))
+plt.imshow(pick_img)
+plt.show()
+plt.imshow(real_im_test)
+plt.show()
+real_im_test = np.array(real_im_test)
+real_im_test = real_im_test.reshape(real_im_test[0].shape[0]*real_im_test[1].shape[0]*3)
+real_im_test = real_im_test[0:100]
+real_im_test = real_im_test.reshape(1,100)
+
+pred = loaded_model.predict(real_im_test)
+plt.imshow(pred[0,:,:,:])
