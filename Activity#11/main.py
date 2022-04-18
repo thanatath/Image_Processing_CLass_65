@@ -14,7 +14,12 @@ import visualkeras
 from numpy.random import *
 from numpy import *
 
-def list_file_in_path(img_size=(32,32)):
+img_size = (32,32)
+
+
+################################### Prepare Real Image ###############################
+
+def list_file_in_path(img_size=img_size):
     img_path = './Art_Bangkok/WaterColor'
     import os
     file_list = []
@@ -22,6 +27,7 @@ def list_file_in_path(img_size=(32,32)):
         for file in files:
             tmp_file = cv2.imread(os.path.join(root, file))
             tmp_file = cv2.resize(tmp_file , img_size, interpolation=cv2.INTER_LINEAR)
+            tmp_file = cv2.cvtColor(tmp_file, cv2.COLOR_BGR2RGB)
             file_list.append(tmp_file)
     return file_list
 
@@ -42,6 +48,7 @@ x_real, y_real = generate_real_samples(train_dataset, 100)
 plt.imshow(x_real[0])
 
 ###################################11.1.2#####################################
+############################## Prepare Fake Image ###########################
 
 def generate_fake_samples(g_model, latent_dim, n_samples):
     # generate points in latent space
@@ -52,15 +59,15 @@ def generate_fake_samples(g_model, latent_dim, n_samples):
     y = zeros((n_samples, 1))
     return X, y
 
-def test_generate_fake_samples(n_samples,target_size=(32,32)):
+def test_generate_fake_samples(n_samples,target_size=img_size):
     hwc = (target_size[0],target_size[1],3)
     X = randn(n_samples, *hwc).astype(np.uint8)
     y = zeros((n_samples, 1))
     return X, y
 
 x_fake, y_fake = test_generate_fake_samples(100)
-plt.imshow(x_fake[0])
 
+# View Training Images and Validation Images
 def show_all_image():
     plt.figure(figsize=(8,8))
     for i in range(25):
@@ -87,8 +94,9 @@ show_all_image()
 
 
 ###################################11.2#####################################
+################# Create Discriminator Model (D) and Training #################
 
-def define_discriminator(input_shape = (32,32,3)):
+def define_discriminator(input_shape = (img_size[0],img_size[1],3)):
       # DEFINE MODEL
     model = Sequential()
     #normal
@@ -112,14 +120,10 @@ def define_discriminator(input_shape = (32,32,3)):
     model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy'])
     return model
 
-d_model = define_discriminator()
-d_model.summary()
-visualkeras.layered_view(d_model,draw_shapes=1,legend=True)
+#Create Model and pre-train Discriminator
 
 
-###################################11.2.1#####################################
-
-def train_discriminator(model,x_real,x_fake,y_real,y_fake,epochs=5,batch_size=128):
+def train_discriminator(model,x_real,x_fake,y_real,y_fake,epochs=100,batch_size=128):
     # TRAIN MODEL
     d_loss = []
     d_acc = []
@@ -141,9 +145,12 @@ def train_discriminator(model,x_real,x_fake,y_real,y_fake,epochs=5,batch_size=12
         print('>%d, d_loss=%.3f, d_acc=%.3f' % (epoch + 1, d_loss[-1], d_acc[-1]))
     return d_loss, d_acc
 
-d_model.summary()
-train_discriminator(d_model,x_real,x_fake,y_real,y_fake,epochs=5,batch_size=128)
 
+d_model = define_discriminator()
+d_model.summary()
+train_discriminator(d_model,x_real,x_fake,y_real,y_fake,batch_size=128)
+
+######################################## Create Generator Model #################################
 # define the standalone generator model
 def define_generator(latent_dim,disc_output_shape=(256,4,4)):
     model = Sequential()
@@ -168,12 +175,16 @@ def define_generator(latent_dim,disc_output_shape=(256,4,4)):
 
 g_model = define_generator(latent_dim=100)
 g_model.summary()
+
+################################ Visual Layer ########################################
+visualkeras.layered_view(d_model,draw_shapes=1,legend=True,padding_left=50,padding_vertical=75)
 visualkeras.layered_view(g_model,draw_shapes=1,legend=True)
      
 
 ###################################11.3#####################################
+######################## GAN Training and Prediction #######################
 
-def define_gan(g_model, d_model, image_shape=(32,32,3)):
+def define_gan(g_model, d_model, image_shape=(img_size[0],img_size[1],3)):
     # make weights in the discriminator not trainable
     d_model.trainable = False
     # connect them
@@ -221,7 +232,7 @@ def train(g_model, d_model, gan_model, dataset, latent_dim,n_batch=128,n_epochs=
             # update the generator via the discriminator✬s error
             g_loss = gan_model.train_on_batch(X_gan, y_gan)
         # summarize loss on this epoch
-        print('>%d, d=%.3f, g=%.3f' % (i+1, d_loss1, d_loss2))
+        print('>%d, discriminator_Loss=%.3f, generator_Loss=%.3f' % (i+1, d_loss1, d_loss2))
         # evaluate the model performance, sometimes
         if (i+1) % 1000 == 0:
             summarize_performance(i, g_model, d_model, dataset, latent_dim)
