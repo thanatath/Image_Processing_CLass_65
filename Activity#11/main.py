@@ -100,7 +100,7 @@ def define_discriminator(input_shape = (img_size[0],img_size[1],3)):
       # DEFINE MODEL
     model = Sequential()
     #normal
-    model.add(Conv2D(64,(3,3),strides=(2,2),padding='same',input_shape= input_shape))
+    model.add(Conv2D(3,(3,3),strides=(1,1),padding='same',input_shape= input_shape))
     model.add(Activation(LeakyReLU(0.2)))
     #down
     model.add(Conv2D(128,(3,3),strides=(2,2),padding='same'))
@@ -177,8 +177,9 @@ g_model = define_generator(latent_dim=100)
 g_model.summary()
 
 ################################ Visual Layer ########################################
+visualkeras.layered_view(g_model,draw_shapes=1,legend=True,padding_vertical=75)
 visualkeras.layered_view(d_model,draw_shapes=1,legend=True,padding_left=50,padding_vertical=75)
-visualkeras.layered_view(g_model,draw_shapes=1,legend=True)
+
 gan_model_view = Sequential()
 gan_model_view.add(g_model)
 gan_model_view.add(d_model)
@@ -241,7 +242,7 @@ def train(g_model, d_model, gan_model, dataset, latent_dim,n_batch=128,n_epochs=
         # summarize loss on this epoch
         print('>%d, discriminator_Loss=%.3f, generator_Loss=%.3f' % (i+1, d_loss1, d_loss2))
         # evaluate the model performance, sometimes
-        if (i+1) % 1000 == 0:
+        if (i+1) % 10000 == 0:
             summarize_performance(i, g_model, d_model, dataset, latent_dim)
 
 
@@ -265,7 +266,7 @@ def summarize_performance(epoch, g_model, d_model, dataset, latent_dim, n_sample
 gan_model = define_gan(g_model, d_model)
 gan_model.summary()
 
-train(g_model, d_model, gan_model, train_dataset, latent_dim=100,n_epochs=100)
+train(g_model, d_model, gan_model, train_dataset, latent_dim=100,n_epochs=500)
 
 X = g_model.predict(generate_latent_points(100,1))
 
